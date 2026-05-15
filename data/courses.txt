@@ -1,124 +1,124 @@
-MATH101,Calculus I,6,100,system,1,MATH
-PHYS101,Physics I,6,80,system,1,PHYS
+MATH101,Calculus I,6,100,vladimirtolstykh,1,MATH
+PHYS101,Physics I,6,80,emrahkoc,1,PHYS
 ENG101,English I,3,100,system,1,ENG
 HIST101,History of Revolution,2,200,system,1,HIST
 TURK101,Turkish I,1,200,system,1,TURK
-ECON101,Economics 101,3,150,alicebrown,2,ECON
-MATH102,Calculus II,6,100,system,2,MATH
-PHYS102,Physics II,6,80,system,2,PHYS
+ECON101,Economics 101,3,150,melihbas,2,ECON
+MATH102,Calculus II,6,100,vladimirtolstykh,2,MATH
+PHYS102,Physics II,6,80,emrahkoc,2,PHYS
 ENG102,English II,3,100,system,2,ENG
 MATH201,Linear Algebra,6,100,system,3,MATH
 MATH202,Differential Equations,6,100,system,4,MATH
-BA202,Global Trading,3,100,alicebrown,4,BA
+BA202,Global Trading,3,100,melihbas,4,BA
 CE204,Tech Writing,3,100,nazifecevik,4,CE
 ETHIC301,Engineering Ethics,3,150,system,5,ENG
 INNO302,Innovation and Entrepreneurship,3,150,system,6,ENG
-BA301,Engineering Economics,6,60,alicebrown,6,BA
+BA301,Engineering Economics,6,60,melihbas,6,BA
 CS101,Intro to Programming,6,50,nazifecevik,1,CE
 CE102,Discrete Math,6,50,nazifecevik,1,CE
-CS102,Object Oriented Programming,6,50,nazifecevik,2,CE
-CE202,Database Systems,6,50,nazifecevik,2,CE
-CS201,Data Structures,6,50,nazifecevik,3,CE
-CE302,Operating Systems,6,50,nazifecevik,3,CE
-CE303,Software Engineering,6,50,nazifecevik,3,CE
-EE202,Logic Design,6,50,nazifecevik,3,EE
-CS202,Computer Architecture,6,50,nazifecevik,4,CE
-CE402,Computer Networks,6,50,nazifecevik,4,CE
-IE202,Probability and Statistics,6,50,nazifecevik,4,IE
-CS301,Algorithms,6,50,nazifecevik,5,CE
-CE501,Web Development,6,50,nazifecevik,5,CE
-CE503,Formal Languages,6,50,nazifecevik,5,CE
-CE_TECHSEL1,Technical Selective I,6,50,nazifecevik,5,CE
-CE_SEL1,Selective I,3,50,nazifecevik,5,CE
-CS302,Artificial Intelligence,6,50,nazifecevik,6,CE
-CE502,Mobile App Development,6,50,nazifecevik,6,CE
-CE_TECHSEL2,Technical Selective II,6,50,nazifecevik,6,CE
-CE_SEL2,Selective II,3,50,nazifecevik,6,CE
-CS401,Machine Learning,6,50,nazifecevik,7,CE
-CE601,Graduation Project I,12,50,nazifecevik,7,CE
-CE_TECHSEL3,Technical Selective III,6,50,nazifecevik,7,CE
-CE_TECHSEL4,Technical Selective IV,6,50,nazifecevik,7,CE
-CS402,Computer Graphics,6,50,nazifecevik,8,CE
-CE602,Graduation Project II,12,50,nazifecevik,8,CE
-CE_TECHSEL5,Technical Selective V,6,50,nazifecevik,8,CE
-CE_TECHSEL6,Technical Selective VI,6,50,nazifecevik,8,CE
-EE101,Intro to EE,6,50,alicebrown,1,EE
-EE103,Circuit Analysis I,6,50,alicebrown,1,EE
-EE102,Digital Logic Design,6,50,alicebrown,2,EE
-EE104,Circuit Analysis II,6,50,alicebrown,2,EE
-EE201,Signals and Systems,6,50,alicebrown,3,EE
-EE203,Electromagnetic Theory,6,50,alicebrown,3,EE
-EE205,Electronics I,6,50,alicebrown,3,EE
-EE_SEL1,EE Selective I,6,50,alicebrown,3,EE
-EE204,Power Systems,6,50,alicebrown,4,EE
-EE206,Electronics II,6,50,alicebrown,4,EE
-EE301,Control Systems,6,50,alicebrown,5,EE
-EE303,Communication Systems,6,50,alicebrown,5,EE
-EE_TECHSEL1,Technical Selective I,6,50,alicebrown,5,EE
-EE_TECHSEL2,Technical Selective II,6,50,alicebrown,5,EE
-EE_SEL2,Selective II,3,50,alicebrown,5,EE
-EE302,Digital Signal Processing,6,50,alicebrown,6,EE
-EE304,Power Electronics,6,50,alicebrown,6,EE
-EE_TECHSEL3,Technical Selective III,6,50,alicebrown,6,EE
-EE_TECHSEL4,Technical Selective IV,6,50,alicebrown,6,EE
-EE_SEL3,Selective III,3,50,alicebrown,6,EE
-EE401,Graduation Project I,12,50,alicebrown,7,EE
-EE_TECHSEL5,Technical Selective V,6,50,alicebrown,7,EE
-EE_TECHSEL6,Technical Selective VI,6,50,alicebrown,7,EE
-EE_TECHSEL7,Technical Selective VII,6,50,alicebrown,7,EE
-EE402,Graduation Project II,12,50,alicebrown,8,EE
-EE_TECHSEL8,Technical Selective VIII,6,50,alicebrown,8,EE
-EE_TECHSEL9,Technical Selective IX,6,50,alicebrown,8,EE
-EE_TECHSEL10,Technical Selective X,6,50,alicebrown,8,EE
-IE101,Intro to IE,6,50,janesmith,1,IE
-IE103,Computer Aided Drawing,6,50,janesmith,1,IE
-IE102,Operations Research I,6,50,janesmith,2,IE
-IE104,Manufacturing Processes,6,50,janesmith,2,IE
-IE201,Operations Research II,6,50,janesmith,3,IE
-IE203,Work Study,6,50,janesmith,3,IE
-IE205,Engineering Economics,6,50,janesmith,3,IE
-IE_SEL1,IE Selective I,6,50,janesmith,3,IE
-IE204,Systems Engineering,6,50,janesmith,4,IE
-IE206,Simulation,6,50,janesmith,4,IE
-IE301,Production Planning,6,50,janesmith,5,IE
-IE303,Quality Control,6,50,janesmith,5,IE
-IE_TECHSEL1,Technical Selective I,6,50,janesmith,5,IE
-IE_TECHSEL2,Technical Selective II,6,50,janesmith,5,IE
-IE_SEL2,Selective II,3,50,janesmith,5,IE
-IE302,Supply Chain Management,6,50,janesmith,6,IE
-IE304,Facility Layout,6,50,janesmith,6,IE
-IE_TECHSEL3,Technical Selective III,6,50,janesmith,6,IE
-IE_TECHSEL4,Technical Selective IV,6,50,janesmith,6,IE
-IE_SEL3,Selective III,3,50,janesmith,6,IE
-IE401,Graduation Project I,12,50,janesmith,7,IE
-IE_TECHSEL5,Technical Selective V,6,50,janesmith,7,IE
-IE_TECHSEL6,Technical Selective VI,6,50,janesmith,7,IE
-IE_TECHSEL7,Technical Selective VII,6,50,janesmith,7,IE
+CS102,Object Oriented Programming,6,50,anilsezgin,2,CE
+CE202,Database Systems,6,50,anilsezgin,2,CE
+CS201,Data Structures,6,50,anilsezgin,3,CE
+CE302,Operating Systems,6,50,sabriserkan,3,CE
+CE303,Software Engineering,6,50,sabriserkan,3,CE
+EE202,Logic Design,6,50,omerisik,3,EE
+CS202,Computer Architecture,6,50,sabriserkan,4,CE
+CE402,Computer Networks,6,50,mertyagcioglu,4,CE
+IE202,Probability and Statistics,6,50,janesmith,4,IE
+CS301,Algorithms,6,50,mertyagcioglu,5,CE
+CE501,Web Development,6,50,mertyagcioglu,5,CE
+CE503,Formal Languages,6,50,unalkucuk,5,CE
+CE_TECHSEL1,Technical Selective I,6,50,unalkucuk,5,CE
+CE_SEL1,Selective I,3,50,unalkucuk,5,CE
+CS302,Artificial Intelligence,6,50,azizkubilay,6,CE
+CE502,Mobile App Development,6,50,azizkubilay,6,CE
+CE_TECHSEL2,Technical Selective II,6,50,azizkubilay,6,CE
+CE_SEL2,Selective II,3,50,tugberkkocatekin,6,CE
+CS401,Machine Learning,6,50,tugberkkocatekin,7,CE
+CE601,Graduation Project I,12,50,tugberkkocatekin,7,CE
+CE_TECHSEL3,Technical Selective III,6,50,halukgumuskaya,7,CE
+CE_TECHSEL4,Technical Selective IV,6,50,halukgumuskaya,7,CE
+CS402,Computer Graphics,6,50,yusufavci,8,CE
+CE602,Graduation Project II,12,50,yusufavci,8,CE
+CE_TECHSEL5,Technical Selective V,6,50,pinarkaradayi,8,CE
+CE_TECHSEL6,Technical Selective VI,6,50,pinarkaradayi,8,CE
+EE101,Intro to EE,6,50,serdarmenekay,1,EE
+EE103,Circuit Analysis I,6,50,serdarmenekay,1,EE
+EE102,Digital Logic Design,6,50,serdarmenekay,2,EE
+EE104,Circuit Analysis II,6,50,serdarmenekay,2,EE
+EE201,Signals and Systems,6,50,obendag,3,EE
+EE203,Electromagnetic Theory,6,50,obendag,3,EE
+EE205,Electronics I,6,50,obendag,3,EE
+EE_SEL1,EE Selective I,6,50,obendag,3,EE
+EE204,Power Systems,6,50,aligungor,4,EE
+EE206,Electronics II,6,50,aligungor,4,EE
+EE301,Control Systems,6,50,aligungor,5,EE
+EE303,Communication Systems,6,50,aligungor,5,EE
+EE_TECHSEL1,Technical Selective I,6,50,aliuzer,5,EE
+EE_TECHSEL2,Technical Selective II,6,50,aliuzer,5,EE
+EE_SEL2,Selective II,3,50,aliuzer,5,EE
+EE302,Digital Signal Processing,6,50,aliuzer,6,EE
+EE304,Power Electronics,6,50,mustafaemreaydemir,6,EE
+EE_TECHSEL3,Technical Selective III,6,50,mustafaemreaydemir,6,EE
+EE_TECHSEL4,Technical Selective IV,6,50,mustafaemreaydemir,6,EE
+EE_SEL3,Selective III,3,50,mustafaemreaydemir,6,EE
+EE401,Graduation Project I,12,50,semrakocaaslan,7,EE
+EE_TECHSEL5,Technical Selective V,6,50,semrakocaaslan,7,EE
+EE_TECHSEL6,Technical Selective VI,6,50,semrakocaaslan,7,EE
+EE_TECHSEL7,Technical Selective VII,6,50,semrakocaaslan,7,EE
+EE402,Graduation Project II,12,50,omerisik,8,EE
+EE_TECHSEL8,Technical Selective VIII,6,50,omerisik,8,EE
+EE_TECHSEL9,Technical Selective IX,6,50,omerisik,8,EE
+EE_TECHSEL10,Technical Selective X,6,50,omerisik,8,EE
+IE101,Intro to IE,6,50,nurdancolakoglu,1,IE
+IE103,Computer Aided Drawing,6,50,nurdancolakoglu,1,IE
+IE102,Operations Research I,6,50,nurdancolakoglu,2,IE
+IE104,Manufacturing Processes,6,50,nurdancolakoglu,2,IE
+IE201,Operations Research II,6,50,nurdancolakoglu,3,IE
+IE203,Work Study,6,50,nurdancolakoglu,3,IE
+IE205,Engineering Economics,6,50,ozgesahin,3,IE
+IE_SEL1,IE Selective I,6,50,ozgesahin,3,IE
+IE204,Systems Engineering,6,50,ozgesahin,4,IE
+IE206,Simulation,6,50,ozgesahin,4,IE
+IE301,Production Planning,6,50,ozgesahin,5,IE
+IE303,Quality Control,6,50,ozgesahin,5,IE
+IE_TECHSEL1,Technical Selective I,6,50,mehmetfatihuslu,5,IE
+IE_TECHSEL2,Technical Selective II,6,50,mehmetfatihuslu,5,IE
+IE_SEL2,Selective II,3,50,mehmetfatihuslu,5,IE
+IE302,Supply Chain Management,6,50,mehmetfatihuslu,6,IE
+IE304,Facility Layout,6,50,mehmetfatihuslu,6,IE
+IE_TECHSEL3,Technical Selective III,6,50,mehmetfatihuslu,6,IE
+IE_TECHSEL4,Technical Selective IV,6,50,sabahattinkerem,6,IE
+IE_SEL3,Selective III,3,50,sabahattinkerem,6,IE
+IE401,Graduation Project I,12,50,sabahattinkerem,7,IE
+IE_TECHSEL5,Technical Selective V,6,50,sabahattinkerem,7,IE
+IE_TECHSEL6,Technical Selective VI,6,50,sabahattinkerem,7,IE
+IE_TECHSEL7,Technical Selective VII,6,50,sabahattinkerem,7,IE
 IE402,Graduation Project II,12,50,janesmith,8,IE
 IE_TECHSEL8,Technical Selective VIII,6,50,janesmith,8,IE
 IE_TECHSEL9,Technical Selective IX,6,50,janesmith,8,IE
 IE_TECHSEL10,Technical Selective X,6,50,janesmith,8,IE
-ME101,Intro to ME,6,50,bobmiller,1,ME
-ME103,Computer Aided Drawing,6,50,bobmiller,1,ME
-ME102,Statics,6,50,bobmiller,2,ME
-ME104,Dynamics,6,50,bobmiller,2,ME
-ME201,Thermodynamics I,6,50,bobmiller,3,ME
-ME203,Fluid Mechanics I,6,50,bobmiller,3,ME
-ME205,Material Science,6,50,bobmiller,3,ME
-ME_SEL1,ME Selective I,6,50,bobmiller,3,ME
-ME202,Thermodynamics II,6,50,bobmiller,4,ME
-ME204,Fluid Mechanics II,6,50,bobmiller,4,ME
-ME206,Manufacturing Processes,6,50,bobmiller,4,ME
-ME301,Heat Transfer,6,50,bobmiller,5,ME
-ME303,Machine Elements I,6,50,bobmiller,5,ME
-ME_TECHSEL1,Technical Selective I,6,50,bobmiller,5,ME
-ME_TECHSEL2,Technical Selective II,6,50,bobmiller,5,ME
-ME_SEL2,Selective II,3,50,bobmiller,5,ME
-ME302,Machine Elements II,6,50,bobmiller,6,ME
-ME304,Control Systems,6,50,bobmiller,6,ME
-ME_TECHSEL3,Technical Selective III,6,50,bobmiller,6,ME
-ME_TECHSEL4,Technical Selective IV,6,50,bobmiller,6,ME
-ME_SEL3,Selective III,3,50,bobmiller,6,ME
+ME101,Intro to ME,6,50,ahmettopuz,1,ME
+ME103,Computer Aided Drawing,6,50,ahmettopuz,1,ME
+ME102,Statics,6,50,ahmettopuz,2,ME
+ME104,Dynamics,6,50,ahmettopuz,2,ME
+ME201,Thermodynamics I,6,50,ahmettopuz,3,ME
+ME203,Fluid Mechanics I,6,50,ahmettopuz,3,ME
+ME205,Material Science,6,50,ahmettopuz,3,ME
+ME_SEL1,ME Selective I,6,50,denizyilmaz,3,ME
+ME202,Thermodynamics II,6,50,denizyilmaz,4,ME
+ME204,Fluid Mechanics II,6,50,denizyilmaz,4,ME
+ME206,Manufacturing Processes,6,50,denizyilmaz,4,ME
+ME301,Heat Transfer,6,50,denizyilmaz,5,ME
+ME303,Machine Elements I,6,50,denizyilmaz,5,ME
+ME_TECHSEL1,Technical Selective I,6,50,denizyilmaz,5,ME
+ME_TECHSEL2,Technical Selective II,6,50,timucinince,5,ME
+ME_SEL2,Selective II,3,50,timucinince,5,ME
+ME302,Machine Elements II,6,50,timucinince,6,ME
+ME304,Control Systems,6,50,timucinince,6,ME
+ME_TECHSEL3,Technical Selective III,6,50,timucinince,6,ME
+ME_TECHSEL4,Technical Selective IV,6,50,timucinince,6,ME
+ME_SEL3,Selective III,3,50,timucinince,6,ME
 ME401,Graduation Project I,12,50,bobmiller,7,ME
 ME_TECHSEL5,Technical Selective V,6,50,bobmiller,7,ME
 ME_TECHSEL6,Technical Selective VI,6,50,bobmiller,7,ME
@@ -127,29 +127,29 @@ ME402,Graduation Project II,12,50,bobmiller,8,ME
 ME_TECHSEL8,Technical Selective VIII,6,50,bobmiller,8,ME
 ME_TECHSEL9,Technical Selective IX,6,50,bobmiller,8,ME
 ME_TECHSEL10,Technical Selective X,6,50,bobmiller,8,ME
-BA101,Intro to Business,6,50,alicebrown,1,BA
-BA103,Financial Accounting,6,50,alicebrown,1,BA
-BA102,Management Info Systems,6,50,alicebrown,2,BA
-BA104,Managerial Accounting,6,50,alicebrown,2,BA
-BA201,Microeconomics,6,50,alicebrown,3,BA
-BA203,Marketing Management,6,50,alicebrown,3,BA
-BA205,Org Behavior,6,50,alicebrown,3,BA
-BA_SEL1,BA Selective I,6,50,alicebrown,3,BA
-BA204,Macroeconomics,6,50,alicebrown,4,BA
-BA206,Human Resources,6,50,alicebrown,4,BA
-BA303,Operations Management,6,50,alicebrown,5,BA
-BA_TECHSEL1,Technical Selective I,6,50,alicebrown,5,BA
-BA_TECHSEL2,Technical Selective II,6,50,alicebrown,5,BA
-BA_SEL2,Selective II,3,50,alicebrown,5,BA
-BA302,Strategic Management,6,50,alicebrown,6,BA
-BA304,Business Ethics,6,50,alicebrown,6,BA
-BA_TECHSEL3,Technical Selective III,6,50,alicebrown,6,BA
-BA_TECHSEL4,Technical Selective IV,6,50,alicebrown,6,BA
-BA_SEL3,Selective III,3,50,alicebrown,6,BA
-BA401,Graduation Project I,12,50,alicebrown,7,BA
-BA_TECHSEL5,Technical Selective V,6,50,alicebrown,7,BA
-BA_TECHSEL6,Technical Selective VI,6,50,alicebrown,7,BA
-BA_TECHSEL7,Technical Selective VII,6,50,alicebrown,7,BA
+BA101,Intro to Business,6,50,melihbas,1,BA
+BA103,Financial Accounting,6,50,aliakdemir,1,BA
+BA102,Management Info Systems,6,50,aliakdemir,2,BA
+BA104,Managerial Accounting,6,50,aliakdemir,2,BA
+BA201,Microeconomics,6,50,emineizlem,3,BA
+BA203,Marketing Management,6,50,emineizlem,3,BA
+BA205,Org Behavior,6,50,emineizlem,3,BA
+BA_SEL1,BA Selective I,6,50,ebrugozukara,3,BA
+BA204,Macroeconomics,6,50,ebrugozukara,4,BA
+BA206,Human Resources,6,50,ebrugozukara,4,BA
+BA303,Operations Management,6,50,secilgurun,5,BA
+BA_TECHSEL1,Technical Selective I,6,50,secilgurun,5,BA
+BA_TECHSEL2,Technical Selective II,6,50,secilgurun,5,BA
+BA_SEL2,Selective II,3,50,yasinaksoy,5,BA
+BA302,Strategic Management,6,50,yasinaksoy,6,BA
+BA304,Business Ethics,6,50,yasinaksoy,6,BA
+BA_TECHSEL3,Technical Selective III,6,50,pinardaloglu,6,BA
+BA_TECHSEL4,Technical Selective IV,6,50,pinardaloglu,6,BA
+BA_SEL3,Selective III,3,50,pinardaloglu,6,BA
+BA401,Graduation Project I,12,50,aysegulgulhan,7,BA
+BA_TECHSEL5,Technical Selective V,6,50,aysegulgulhan,7,BA
+BA_TECHSEL6,Technical Selective VI,6,50,aysegulgulhan,7,BA
+BA_TECHSEL7,Technical Selective VII,6,50,aysegulgulhan,7,BA
 BA402,Graduation Project II,12,50,alicebrown,8,BA
 BA_TECHSEL8,Technical Selective VIII,6,50,alicebrown,8,BA
 BA_TECHSEL9,Technical Selective IX,6,50,alicebrown,8,BA

@@ -1,0 +1,4 @@
+bavercls,CE_TECHSEL3,2026-2027,Fall
+bavercls,CE601,2026-2027,Fall
+bavercls,CS401,2026-2027,Fall
+bavercls,CE_TECHSEL4,2026-2027,Fall

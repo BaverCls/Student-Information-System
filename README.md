@@ -10,16 +10,19 @@ A comprehensive, file-based University Automation System developed in Java using
 - **File-based Persistence:** All data (users, enrollments, grades, courses) is securely stored locally in UTF-8 encoded text files, requiring no external database setup.
 
 ## Running the Application
-The project requires Java 11 or higher. No external libraries are needed.
+The project requires Java 11 or higher and uses FlatLaf for its modern UI.
 
 1. Clone the repository.
 2. Compile the source code:
    ```bash
-   javac -encoding UTF-8 -d bin src/*.java src/models/*.java
+   javac -encoding UTF-8 -cp "lib/*" -d bin src/*.java src/models/*.java
    ```
 3. Run the application:
    ```bash
-   java -cp bin UniversityAutomationApp
+   # On Windows:
+   java -cp "bin;lib/*" UniversityAutomationApp
+   # On Mac/Linux:
+   java -cp "bin:lib/*" UniversityAutomationApp
    ```
 
 *(Alternatively, you can open the project in any Java IDE like IntelliJ IDEA, Eclipse, or VS Code and run `UniversityAutomationApp.java` directly).*

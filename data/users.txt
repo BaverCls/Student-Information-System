@@ -1,5 +1,5 @@
 admin,123,ADMIN,System Administrator,A1
-nazifecevik,java123,INSTRUCTOR,Nazife Cevik,T1
+nazifecevik,java123,INSTRUCTOR,Doç. Dr. Nazife Cevik,T1
 secondadmin,pass456,ADMIN,Assistant Admin,A2
 janesmith,smith123,INSTRUCTOR,Prof. Jane Smith,T2
 bobmiller,bob789,INSTRUCTOR,Bob Miller,T3
@@ -205,3 +205,36 @@ ren.fedorov,user,STUDENT,Ren Fedorov,S198
 can.williams,user,STUDENT,Can Williams,S199
 matias.kato,user,STUDENT,Matias Kato,S200
 bavercls,1907,STUDENT,Mustafa Baver Çalış,S201
+anilsezgin,anilsezgin123,INSTRUCTOR,Dr. Öğr. Üyesi Anıl SEZGİN,T5
+sabriserkan,sabriserkan123,INSTRUCTOR,Dr. Öğr. Üyesi Sabri Serkan GÜLLÜOĞLU,T6
+mertyagcioglu,mertyagcioglu123,INSTRUCTOR,Dr. Öğr. Üyesi Mert YAĞCIOĞLU,T7
+unalkucuk,unalkucuk123,INSTRUCTOR,Dr. Öğr. Üyesi Ünal KÜÇÜK,T8
+azizkubilay,azizkubilay123,INSTRUCTOR,Dr. Öğr. Üyesi Aziz Kubilay OVACIKLI,T9
+tugberkkocatekin,tugberkkocatekin123,INSTRUCTOR,Dr. Öğr. Üyesi Tuğberk KOCATEKİN,T10
+halukgumuskaya,halukgumuskaya123,INSTRUCTOR,Prof. Dr. Haluk GÜMÜŞKAYA,T11
+yusufavci,yusufavci123,INSTRUCTOR,Prof. Dr. Yusuf AVCI,T12
+vladimirtolstykh,vladimirtolstykh123,INSTRUCTOR,Prof. Dr. Vladimir Tolstykh,T13
+pinarkaradayi,pinarkaradayi123,INSTRUCTOR,Doç. Dr. Pınar Karadayı ATAŞ,T14
+serdarmenekay,serdarmenekay123,INSTRUCTOR,Dr. Öğr. Üyesi Serdar MENEKAY,T15
+obendag,obendag123,INSTRUCTOR,Dr. Öğr. Üyesi Oben DAĞ,T16
+emrahkoc,emrahkoc123,INSTRUCTOR,Dr. Öğr. Üyesi Emrah KOÇ,T17
+aligungor,aligungor123,INSTRUCTOR,Prof. Dr. Ali GÜNGÖR,T18
+aliuzer,aliuzer123,INSTRUCTOR,Prof. Dr. Ali UZER,T19
+mustafaemreaydemir,mustafaemreaydemir123,INSTRUCTOR,Prof. Dr. Mustafa Emre AYDEMİR,T20
+semrakocaaslan,semrakocaaslan123,INSTRUCTOR,Dr. Öğr. Üyesi Semra KOCAASLAN KARAMZADEH,T21
+omerisik,omerisik123,INSTRUCTOR,Dr. Öğr. Üyesi Ömer IŞIK,T22
+nurdancolakoglu,nurdancolakoglu123,INSTRUCTOR,Prof. Dr. Nurdan ÇOLAKOĞLU,T23
+ozgesahin,ozgesahin123,INSTRUCTOR,Dr. Öğr. Üyesi Özge ŞAHİN ZORLUOĞLU,T24
+mehmetfatihuslu,mehmetfatihuslu123,INSTRUCTOR,Dr. Öğr. Üyesi Mehmet Fatih USLU,T25
+sabahattinkerem,sabahattinkerem123,INSTRUCTOR,Dr. Öğr. Üyesi Sabahattin Kerem AYTULUN,T26
+ahmettopuz,ahmettopuz123,INSTRUCTOR,Prof. Dr. Ahmet TOPUZ,T27
+denizyilmaz,denizyilmaz123,INSTRUCTOR,Doç. Dr. Deniz YILMAZ,T28
+timucinince,timucinince123,INSTRUCTOR,Dr. Öğr. Üyesi İbrahim Timuçin İNCE,T29
+melihbas,melihbas123,INSTRUCTOR,Prof. Dr. İsmail Melih BAŞ,T30
+aliakdemir,aliakdemir123,INSTRUCTOR,Prof. Dr. Ali AKDEMİR,T31
+emineizlem,emineizlem123,INSTRUCTOR,Prof. Dr. Emine İzlem GÖZÜKARA YILDIZ,T32
+ebrugozukara,ebrugozukara123,INSTRUCTOR,Prof. Dr. Ebru GÖZÜKARA,T33
+secilgurun,secilgurun123,INSTRUCTOR,Doç. Dr. Seçil GÜRÜN KARATEPE,T34
+yasinaksoy,yasinaksoy123,INSTRUCTOR,Dr. Öğr. Üyesi Yasin AKSOY,T35
+pinardaloglu,pinardaloglu123,INSTRUCTOR,Doç. Dr. Pınar DALOĞLU,T36
+aysegulgulhan,aysegulgulhan123,INSTRUCTOR,Dr. Öğr. Üyesi Ayşegül GÜLHAN,T37

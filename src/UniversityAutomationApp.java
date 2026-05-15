@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 import java.util.function.Consumer;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatClientProperties;
 
 public class UniversityAutomationApp extends JFrame {
     private static final Color DARK_BG = new Color(15, 23, 42); // Deep dark blue
@@ -42,35 +44,111 @@ public class UniversityAutomationApp extends JFrame {
     }
 
     private void createLoginPanel() {
-        JPanel loginPanel = new GradientPanel(new GridBagLayout());
+        // ── Outer background panel ──────────────────────────────────────────
+        JPanel loginPanel = new JPanel(new GridBagLayout()) {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(new Color(13, 17, 30));
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.dispose();
+            }
+        };
+        loginPanel.setOpaque(true);
+        loginPanel.setBackground(new Color(13, 17, 30));
 
-        JPanel form = new JPanel(new GridLayout(4, 1, 10, 10));
-        form.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(PANEL_BG_LIGHT, 18), BorderFactory.createEmptyBorder(30, 30, 30, 30)));
-        form.setBackground(PANEL_BG);
+        // ── Card: custom-painted rounded rectangle ───────────────────────────
+        JPanel card = new JPanel() {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                // Shadow
+                g2.setColor(new Color(0, 0, 0, 60));
+                g2.fillRoundRect(4, 6, getWidth() - 4, getHeight() - 4, 24, 24);
+                // Card background
+                g2.setColor(new Color(28, 35, 52));
+                g2.fillRoundRect(0, 0, getWidth() - 4, getHeight() - 4, 24, 24);
+                // Card border
+                g2.setColor(new Color(55, 70, 100));
+                g2.setStroke(new BasicStroke(1.5f));
+                g2.drawRoundRect(0, 0, getWidth() - 5, getHeight() - 5, 24, 24);
+                g2.dispose();
+            }
+        };
+        card.setLayout(new GridBagLayout());
+        card.setOpaque(false);
+        card.setPreferredSize(new Dimension(460, 390));
 
-        JLabel baslik = new JLabel("System Login", SwingConstants.CENTER);
-        baslik.setFont(APP_FONT.deriveFont(Font.BOLD, 22f));
-        baslik.setForeground(TEXT_LIGHT);
-        
+        // Shared GridBagConstraints: every row fills full width
+        GridBagConstraints fc = new GridBagConstraints();
+        fc.gridx   = 0;
+        fc.fill    = GridBagConstraints.HORIZONTAL;
+        fc.weightx = 1.0;
+
+        // ── Title ─────────────────────────────────────────────────────────────
+        JLabel title = new JLabel("System Login", SwingConstants.CENTER);
+        title.setFont(APP_FONT.deriveFont(Font.BOLD, 26f));
+        title.setForeground(new Color(248, 250, 252));
+
+        // ── Username ─────────────────────────────────────────────────────────
+        JLabel userLabel = new JLabel("Kullanıcı Adı");
+        userLabel.setFont(APP_FONT.deriveFont(Font.PLAIN, 13f));
+        userLabel.setForeground(new Color(148, 163, 184));
+
         JTextField usernameField = new JTextField("admin");
+        styleLoginField(usernameField);
+
+        // ── Password ─────────────────────────────────────────────────────────
+        JLabel passLabel = new JLabel("Şifre");
+        passLabel.setFont(APP_FONT.deriveFont(Font.PLAIN, 13f));
+        passLabel.setForeground(new Color(148, 163, 184));
+
         JPasswordField passwordField = new JPasswordField("123");
-        JButton loginButton = new JButton("Login");
-        styleTextField(usernameField);
-        styleTextField(passwordField);
-        styleButton(loginButton);
+        styleLoginField(passwordField);
+
+        // ── Login Button: fully custom-painted pill ───────────────────────────
+        final Color BTN_NORMAL = new Color(0, 210, 255);
+        final Color BTN_HOVER  = new Color(0, 180, 225);
+        final Color BTN_PRESS  = new Color(0, 150, 200);
+        final boolean[] btnState = {false, false}; // [hover, pressed]
+
+        JButton loginButton = new JButton("Login") {
+            @Override protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Color fill = btnState[1] ? BTN_PRESS : btnState[0] ? BTN_HOVER : BTN_NORMAL;
+                g2.setColor(fill);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2.setFont(APP_FONT.deriveFont(Font.BOLD, 15f));
+                g2.setColor(new Color(10, 20, 40));
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = (getWidth()  - fm.stringWidth(getText())) / 2;
+                int ty = (getHeight() + fm.getAscent() - fm.getDescent()) / 2;
+                g2.drawString(getText(), tx, ty);
+                g2.dispose();
+            }
+            @Override public Dimension getPreferredSize()  { return new Dimension(10, 52); }
+            @Override public Dimension getMinimumSize()     { return new Dimension(10, 52); }
+        };
+        loginButton.setContentAreaFilled(false);
+        loginButton.setBorderPainted(false);
+        loginButton.setFocusPainted(false);
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e)  { btnState[0] = true;  loginButton.repaint(); }
+            public void mouseExited(MouseEvent e)   { btnState[0] = false; btnState[1] = false; loginButton.repaint(); }
+            public void mousePressed(MouseEvent e)  { btnState[1] = true;  loginButton.repaint(); }
+            public void mouseReleased(MouseEvent e) { btnState[1] = false; loginButton.repaint(); }
+        });
 
         loginButton.addActionListener(e -> {
             String uName = usernameField.getText().trim();
-            String pass = new String(passwordField.getPassword());
-            
+            String pass  = new String(passwordField.getPassword());
             User found = null;
             for (User u : data.users) {
                 if (u.getUsername().equals(uName) && u.getPassword().equals(pass)) {
-                    found = u;
-                    break;
+                    found = u; break;
                 }
             }
-
             if (found != null) {
                 currentUser = found;
                 refreshDashboard();
@@ -80,41 +158,57 @@ public class UniversityAutomationApp extends JFrame {
             }
         });
 
-        form.add(baslik);
-        form.add(usernameField);
-        form.add(passwordField);
-        form.add(loginButton);
+        // ── Assemble card with GridBagLayout (every row = full width) ─────────
+        fc.gridy = 0; fc.insets = new Insets(44, 44, 28, 44); card.add(title,         fc);
+        fc.gridy = 1; fc.insets = new Insets(0,  44,  6, 44); card.add(userLabel,     fc);
+        fc.gridy = 2; fc.insets = new Insets(0,  44, 16, 44); card.add(usernameField, fc);
+        fc.gridy = 3; fc.insets = new Insets(0,  44,  6, 44); card.add(passLabel,     fc);
+        fc.gridy = 4; fc.insets = new Insets(0,  44, 24, 44); card.add(passwordField, fc);
+        fc.gridy = 5; fc.insets = new Insets(0,  44, 44, 44); card.add(loginButton,   fc);
 
-        loginPanel.add(form);
+        // ── Quick Login Buttons (test) ────────────────────────────────────────
+        JPanel quickPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        quickPanel.setOpaque(false);
 
-        // ENHANCEMENT: Quick Login Buttons for Testing
-        JPanel quickLoginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        quickLoginPanel.setBackground(new Color(0,0,0,0)); // Transparent
-        quickLoginPanel.setOpaque(false);
+        JButton adminQuick      = new JButton("⚡ Admin");
+        JButton instructorQuick = new JButton("⚡ Instructor");
+        JButton studentQuick    = new JButton("⚡ Student");
 
-        JButton adminQuick = new JButton("Quick Admin");
-        JButton instructorQuick = new JButton("Quick Instructor");
-        JButton studentQuick = new JButton("Quick Student");
-
-        styleQuickButton(adminQuick, new Color(79, 70, 229));
+        styleQuickButton(adminQuick,      new Color(79, 70, 229));
         styleQuickButton(instructorQuick, new Color(16, 185, 129));
-        styleQuickButton(studentQuick, new Color(245, 158, 11));
+        styleQuickButton(studentQuick,    new Color(245, 158, 11));
 
-        adminQuick.addActionListener(e -> { usernameField.setText("admin"); passwordField.setText("123"); loginButton.doClick(); });
+        adminQuick.addActionListener(e      -> { usernameField.setText("admin");       passwordField.setText("123");     loginButton.doClick(); });
         instructorQuick.addActionListener(e -> { usernameField.setText("nazifecevik"); passwordField.setText("java123"); loginButton.doClick(); });
-        studentQuick.addActionListener(e -> { usernameField.setText("bavercls"); passwordField.setText("1907"); loginButton.doClick(); });
+        studentQuick.addActionListener(e    -> { usernameField.setText("bavercls");    passwordField.setText("1907");    loginButton.doClick(); });
 
-        quickLoginPanel.add(adminQuick);
-        quickLoginPanel.add(instructorQuick);
-        quickLoginPanel.add(studentQuick);
+        quickPanel.add(adminQuick);
+        quickPanel.add(instructorQuick);
+        quickPanel.add(studentQuick);
 
+        // ── Layout ────────────────────────────────────────────────────────────
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridx = 0; gbc.gridy = 0;
+        loginPanel.add(card, gbc);
+        gbc.gridy = 1;
         gbc.insets = new Insets(20, 0, 0, 0);
-        loginPanel.add(quickLoginPanel, gbc);
+        loginPanel.add(quickPanel, gbc);
 
-        applyTheme(loginPanel);
         mainPanel.add(loginPanel, "login");
+    }
+
+    /** Styles an input field for the login card. */
+    private void styleLoginField(JTextField f) {
+        f.setFont(APP_FONT.deriveFont(14f));
+        f.setBackground(new Color(18, 24, 40));
+        f.setForeground(new Color(185, 200, 220));
+        f.setCaretColor(new Color(0, 210, 255));
+        // Let GridBagLayout control width; only fix height via border padding
+        f.putClientProperty(FlatClientProperties.STYLE, "background: #12182B; foreground: #B9C8DC; arc: 10;");
+        f.setBorder(BorderFactory.createCompoundBorder(
+            new RoundedBorder(new Color(55, 70, 105), 10),
+            BorderFactory.createEmptyBorder(10, 14, 10, 14)
+        ));
     }
 
     private void styleQuickButton(JButton b, Color c) {
@@ -122,7 +216,8 @@ public class UniversityAutomationApp extends JFrame {
         b.setBackground(c);
         b.setForeground(Color.WHITE);
         b.setFocusPainted(false);
-        b.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(c, 8), BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        b.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(c, 8), BorderFactory.createEmptyBorder(5, 12, 5, 12)));
     }
 
     private void refreshDashboard() {
@@ -159,34 +254,8 @@ public class UniversityAutomationApp extends JFrame {
         welcomeLabel.setFont(APP_FONT.deriveFont(Font.BOLD, 16f));
         
         JButton logoutButton = new JButton("Logout");
-        logoutButton.setFont(APP_FONT.deriveFont(Font.BOLD, 13f));
-        logoutButton.setForeground(Color.WHITE); 
-        logoutButton.setBackground(new Color(220, 38, 38));
-        logoutButton.setFocusPainted(false);
-        logoutButton.setBorder(BorderFactory.createCompoundBorder(
-            new RoundedBorder(new Color(220, 38, 38), 12),
-            BorderFactory.createEmptyBorder(6, 20, 6, 20)
-        ));
-        logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        logoutButton.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                logoutButton.setBackground(new Color(185, 28, 28)); // Darker red on hover
-                logoutButton.setBorder(BorderFactory.createCompoundBorder(
-                    new RoundedBorder(new Color(185, 28, 28), 12),
-                    BorderFactory.createEmptyBorder(6, 20, 6, 20)
-                ));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                logoutButton.setBackground(new Color(220, 38, 38));
-                logoutButton.setBorder(BorderFactory.createCompoundBorder(
-                    new RoundedBorder(new Color(220, 38, 38), 12),
-                    BorderFactory.createEmptyBorder(6, 20, 6, 20)
-                ));
-            }
-        });
+        styleButton(logoutButton);
+        logoutButton.setBackground(new Color(225, 29, 72)); // Modern soft red
 
         logoutButton.addActionListener(e -> {
             currentUser = null;
@@ -194,7 +263,7 @@ public class UniversityAutomationApp extends JFrame {
         });
 
         JPanel logoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 25, 0));
-        logoutPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        logoutPanel.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
         logoutPanel.setOpaque(false);
         logoutPanel.add(logoutButton);
 
@@ -235,23 +304,45 @@ public class UniversityAutomationApp extends JFrame {
         main.setBackground(DARK_BG);
         main.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Top: Course Selection
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // ── Top Filter Bar ──────────────────────────────────────────────────
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT, 14, 8));
         top.setBackground(DARK_BG);
-        JLabel label = new JLabel("Select Course: ");
-        label.setFont(APP_FONT.deriveFont(Font.BOLD));
-        label.setForeground(TEXT_LIGHT);
+
+        // Course combo
+        JLabel courseLabel = new JLabel("Course:");
+        courseLabel.setFont(APP_FONT.deriveFont(Font.BOLD));
+        courseLabel.setForeground(TEXT_LIGHT);
         JComboBox<String> courseCombo = new JComboBox<>();
         for (Course c : data.courses) {
             if (c.getInstructorUsername().equals(currentUser.getUsername())) {
                 courseCombo.addItem(c.getCourseCode() + " - " + c.getCourseName());
             }
         }
-        top.add(label);
-        top.add(courseCombo);
+
+        // Academic-year combo — populated from existing GradeRecords
+        JLabel yearLabel = new JLabel("Year:");
+        yearLabel.setFont(APP_FONT.deriveFont(Font.BOLD));
+        yearLabel.setForeground(TEXT_LIGHT);
+        JComboBox<String> yearCombo = new JComboBox<>();
+        yearCombo.addItem("All Years");
+        java.util.TreeSet<String> years = new java.util.TreeSet<>();
+        for (GradeRecord gr : data.grades) years.add(gr.getAcademicYear());
+        for (String y : years) yearCombo.addItem(y);
+
+        // Semester combo
+        JLabel semLabel = new JLabel("Semester:");
+        semLabel.setFont(APP_FONT.deriveFont(Font.BOLD));
+        semLabel.setForeground(TEXT_LIGHT);
+        JComboBox<String> semCombo = new JComboBox<>(new String[]{"All Semesters", "Fall", "Spring"});
+
+        top.add(courseLabel); top.add(courseCombo);
+        top.add(Box.createHorizontalStrut(10));
+        top.add(yearLabel);   top.add(yearCombo);
+        top.add(Box.createHorizontalStrut(10));
+        top.add(semLabel);    top.add(semCombo);
         main.add(top, BorderLayout.NORTH);
 
-        // Center: Stats & Chart
+        // ── Center: Summary Cards + Bar Chart ───────────────────────────────
         JPanel center = new JPanel(new BorderLayout(0, 20));
         center.setBackground(DARK_BG);
         center.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -260,14 +351,22 @@ public class UniversityAutomationApp extends JFrame {
         cardsPanel.setBackground(DARK_BG);
 
         GradeChartPanel chartPanel = new GradeChartPanel();
-        
-        courseCombo.addActionListener(e -> {
-            String selected = (String) courseCombo.getSelectedItem();
-            if (selected != null) {
-                String code = selected.split(" - ")[0];
-                updateInstructorStats(cardsPanel, chartPanel, code);
-            }
-        });
+
+        // Shared refresh runnable — reads all three combos
+        Runnable refresh = () -> {
+            String sel = (String) courseCombo.getSelectedItem();
+            if (sel == null) return;
+            String code    = sel.split(" - ")[0];
+            String year    = (String) yearCombo.getSelectedItem();
+            String sem     = (String) semCombo.getSelectedItem();
+            updateInstructorStats(cardsPanel, chartPanel, code,
+                    "All Years".equals(year) ? null : year,
+                    "All Semesters".equals(sem) ? null : sem);
+        };
+
+        courseCombo.addActionListener(e -> refresh.run());
+        yearCombo  .addActionListener(e -> refresh.run());
+        semCombo   .addActionListener(e -> refresh.run());
 
         center.add(cardsPanel, BorderLayout.NORTH);
         center.add(chartPanel, BorderLayout.CENTER);
@@ -275,7 +374,7 @@ public class UniversityAutomationApp extends JFrame {
 
         // Initial update
         if (courseCombo.getItemCount() > 0) {
-            updateInstructorStats(cardsPanel, chartPanel, courseCombo.getItemAt(0).split(" - ")[0]);
+            refresh.run();
         } else {
             cardsPanel.add(new JLabel("No courses assigned."));
         }
@@ -443,14 +542,22 @@ public class UniversityAutomationApp extends JFrame {
         poolTable.getColumnModel().getColumn(4).setCellRenderer(new TableCellRenderer() {
             @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JButton b = new JButton("Add");
-                b.setBackground(new Color(34, 197, 94)); b.setForeground(Color.WHITE); return b;
+                styleSmallButton(b);
+                b.setBackground(new Color(34, 197, 94));
+                JPanel p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                p.add(b);
+                return p;
             }
         });
         poolTable.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
             private JButton b = new JButton("Add");
+            private JPanel p;
             private String code;
             {
-                b.setBackground(new Color(34, 197, 94)); b.setForeground(Color.WHITE);
+                styleSmallButton(b);
+                b.setBackground(new Color(34, 197, 94));
                 b.addActionListener(e -> {
                     stopCellEditing();
                     data.curriculums.add(new Curriculum(dept, semester, code));
@@ -458,10 +565,14 @@ public class UniversityAutomationApp extends JFrame {
                     dialog.dispose();
                     onAdd.run();
                 });
+                p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.add(b);
             }
             @Override public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
                 code = table.getValueAt(row, 0).toString();
-                return b;
+                p.setBackground(table.getSelectionBackground());
+                return p;
             }
             @Override public Object getCellEditorValue() { return "Add"; }
         });
@@ -472,10 +583,23 @@ public class UniversityAutomationApp extends JFrame {
         dialog.setVisible(true);
     }
 
-    private void updateInstructorStats(JPanel cardsPanel, GradeChartPanel chartPanel, String courseCode) {
+    /**
+     * @param academicYear null = all years
+     * @param semester     null = all semesters
+     */
+    private void updateInstructorStats(JPanel cardsPanel, GradeChartPanel chartPanel,
+                                       String courseCode, String academicYear, String semester) {
         cardsPanel.removeAll();
-        
-        int enrolled = countEnrollmentsForCourse(courseCode);
+
+        // Enrolled count — filtered by year+semester if specified
+        int enrolled = 0;
+        for (Enrollment e : data.enrollments) {
+            if (!e.getCourseCode().equals(courseCode)) continue;
+            if (academicYear != null && !e.getAcademicYear().equals(academicYear)) continue;
+            if (semester    != null && !e.getSemester().equalsIgnoreCase(semester))  continue;
+            enrolled++;
+        }
+
         double sum = 0;
         int gradeCount = 0;
         int passed = 0;
@@ -484,31 +608,39 @@ public class UniversityAutomationApp extends JFrame {
         for (String g : gradesList) distribution.put(g, 0);
 
         for (GradeRecord gr : data.grades) {
-            if (gr.getCourseCode().equals(courseCode)) {
-                double avg = calculateAverage(gr.getMidterm(), gr.getFinalExam());
-                String letter = calculateLetterGrade(avg);
-                distribution.put(letter, distribution.get(letter) + 1);
-                sum += avg;
-                gradeCount++;
-                if (!letter.equals("FF")) passed++;
-            }
+            if (!gr.getCourseCode().equals(courseCode)) continue;
+            if (academicYear != null && !gr.getAcademicYear().equals(academicYear)) continue;
+            if (semester     != null && !gr.getSemester().equalsIgnoreCase(semester))  continue;
+
+            double avg = calculateAverage(gr.getMidterm(), gr.getFinalExam());
+            String letter = calculateLetterGrade(avg);
+            distribution.put(letter, distribution.get(letter) + 1);
+            sum += avg;
+            gradeCount++;
+            if (!letter.equals("FF") && !letter.equals("FD")) passed++;
         }
 
-        double courseAvg = gradeCount > 0 ? sum / gradeCount : 0;
-        double successRate = gradeCount > 0 ? (passed * 100.0 / gradeCount) : 0;
+        double courseAvg    = gradeCount > 0 ? sum / gradeCount       : 0;
+        double successRate  = gradeCount > 0 ? (passed * 100.0 / gradeCount) : 0;
 
-        cardsPanel.add(createReportCard("TOTAL ENROLLED", String.valueOf(enrolled), ACCENT));
-        cardsPanel.add(createReportCard("AVERAGE GRADE", String.format("%.1f", courseAvg), new Color(16, 185, 129)));
-        cardsPanel.add(createReportCard("SUCCESS RATE", String.format("%%%.1f", successRate), new Color(245, 158, 11)));
+        // Filter label shown in the subtitle of each card
+        String filterInfo = (academicYear != null ? academicYear : "All Years")
+                          + "  •  " + (semester != null ? semester : "All Semesters");
+        chartPanel.setSubtitle(filterInfo);
+
+        cardsPanel.add(createReportCard("TOTAL ENROLLED",  String.valueOf(enrolled), ACCENT));
+        cardsPanel.add(createReportCard("AVERAGE SCORE",   String.format("%.1f", courseAvg),   new Color(16, 185, 129)));
+        cardsPanel.add(createReportCard("SUCCESS RATE",    String.format("%.1f%%", successRate), new Color(245, 158, 11)));
 
         chartPanel.setDistribution(distribution);
-        
+
         cardsPanel.revalidate();
         cardsPanel.repaint();
     }
 
     private static class GradeChartPanel extends JPanel {
         private Map<String, Integer> distribution = new java.util.HashMap<>();
+        private String subtitle = "";
 
         public GradeChartPanel() {
             setBackground(PANEL_BG);
@@ -523,6 +655,11 @@ public class UniversityAutomationApp extends JFrame {
             repaint();
         }
 
+        public void setSubtitle(String text) {
+            this.subtitle = text;
+            repaint();
+        }
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -531,20 +668,47 @@ public class UniversityAutomationApp extends JFrame {
 
             int w = getWidth();
             int h = getHeight();
-            int padding = 60;
-            int chartW = w - padding * 2;
-            int chartH = h - padding * 2;
+            int topPad    = 50;  // extra room for the subtitle
+            int sidePad   = 60;
+            int bottomPad = 60;
+            int chartW = w - sidePad * 2;
+            int chartH = h - topPad - bottomPad;
+
+            // ── Subtitle (filter info) ──────────────────────────────────────
+            if (subtitle != null && !subtitle.isEmpty()) {
+                g2.setFont(APP_FONT.deriveFont(Font.ITALIC, 12f));
+                g2.setColor(TEXT_MUTED);
+                int sw = g2.getFontMetrics().stringWidth(subtitle);
+                g2.drawString(subtitle, (w - sw) / 2, 22);
+            }
+
+            // ── Chart title ─────────────────────────────────────────────────
+            g2.setFont(APP_FONT.deriveFont(Font.BOLD, 13f));
+            g2.setColor(TEXT_LIGHT);
+            String title = "Grade Distribution";
+            int tw = g2.getFontMetrics().stringWidth(title);
+            g2.drawString(title, (w - tw) / 2, 38);
 
             String[] keys = {"AA", "BA", "BB", "CB", "CC", "DC", "DD", "FF"};
             int maxVal = 1;
             for (int val : distribution.values()) if (val > maxVal) maxVal = val;
 
-            int barW = chartW / keys.length - 20;
-            int startX = padding + 10;
-            int baselineY = h - padding;
+            int barW    = chartW / keys.length - 20;
+            int startX  = sidePad + 10;
+            int baselineY = topPad + chartH;
 
+            // Y-axis baseline
             g2.setColor(TEXT_MUTED);
-            g2.drawLine(padding, baselineY, w - padding, baselineY);
+            g2.drawLine(sidePad, baselineY, w - sidePad, baselineY);
+
+            // Subtle Y grid lines
+            g2.setColor(new Color(71, 85, 105, 80));
+            for (int tick = 1; tick <= 4; tick++) {
+                int gy = baselineY - (int) (chartH * tick / 4.0);
+                g2.drawLine(sidePad, gy, w - sidePad, gy);
+            }
+
+            Color failColor = new Color(239, 68, 68);
 
             for (int i = 0; i < keys.length; i++) {
                 String key = keys[i];
@@ -554,21 +718,24 @@ public class UniversityAutomationApp extends JFrame {
                 int x = startX + i * (barW + 20);
                 int y = baselineY - barH;
 
-                GradientPaint gp = new GradientPaint(x, y, ACCENT, x, baselineY, new Color(ACCENT.getRed(), ACCENT.getGreen(), ACCENT.getBlue(), 100));
+                Color barTop   = key.equals("FF") ? failColor : ACCENT;
+                Color barBottom = new Color(barTop.getRed(), barTop.getGreen(), barTop.getBlue(), 80);
+                GradientPaint gp = new GradientPaint(x, y, barTop, x, baselineY, barBottom);
                 g2.setPaint(gp);
-                g2.fillRoundRect(x, y, barW, barH, 10, 10);
-                
+                if (barH > 0) g2.fillRoundRect(x, y, barW, barH, 10, 10);
+
                 if (val > 0) {
                     g2.setColor(TEXT_LIGHT);
-                    g2.setFont(APP_FONT.deriveFont(Font.BOLD));
+                    g2.setFont(APP_FONT.deriveFont(Font.BOLD, 12f));
                     String valStr = String.valueOf(val);
                     int strW = g2.getFontMetrics().stringWidth(valStr);
-                    g2.drawString(valStr, x + (barW - strW) / 2, y - 10);
+                    g2.drawString(valStr, x + (barW - strW) / 2, y - 8);
                 }
 
-                g2.setColor(TEXT_LIGHT);
+                g2.setColor(key.equals("FF") ? failColor : TEXT_LIGHT);
+                g2.setFont(APP_FONT.deriveFont(Font.BOLD, 12f));
                 int labelW = g2.getFontMetrics().stringWidth(key);
-                g2.drawString(key, x + (barW - labelW) / 2, baselineY + 25);
+                g2.drawString(key, x + (barW - labelW) / 2, baselineY + 22);
             }
 
             g2.dispose();
@@ -780,6 +947,7 @@ public class UniversityAutomationApp extends JFrame {
             styleButton(addButton);
             styleButton(editButton);
             styleButton(deleteButton);
+            deleteButton.setBackground(new Color(225, 29, 72));
             
             editButton.setEnabled(false);
             deleteButton.setEnabled(false);
@@ -907,7 +1075,7 @@ public class UniversityAutomationApp extends JFrame {
         cardsPanel.setBackground(DARK_BG);
         GradeChartPanel chartPanel = new GradeChartPanel();
 
-        updateInstructorStats(cardsPanel, chartPanel, courseCode);
+        updateInstructorStats(cardsPanel, chartPanel, courseCode, null, null);
 
         JPanel centerPanel = new JPanel(new BorderLayout(0, 20));
         centerPanel.setBackground(DARK_BG);
@@ -1463,8 +1631,9 @@ public class UniversityAutomationApp extends JFrame {
         availableTable.getColumnModel().getColumn(8).setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JButton b = new JButton(value.toString());
-                String valStr = value.toString();
+                String valStr = value == null ? "" : value.toString();
+                JButton b = new JButton(valStr);
+                styleSmallButton(b);
                 String courseSemStr = (String) table.getValueAt(row, 4);
                 boolean isCourseFall = true;
                 try {
@@ -1489,7 +1658,12 @@ public class UniversityAutomationApp extends JFrame {
                 }
                 b.setForeground(Color.WHITE);
                 b.setFont(APP_FONT.deriveFont(Font.BOLD, 11f));
-                return b;
+                
+                JPanel p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                p.add(b);
+                return p;
             }
         });
 
@@ -1508,11 +1682,13 @@ public class UniversityAutomationApp extends JFrame {
         availableTable.getColumnModel().getColumn(8).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
             private String label;
             private JButton button;
+            private JPanel panel;
             private String courseCode;
             private boolean isCourseFall;
 
             {
                 button = new JButton();
+                styleSmallButton(button);
                 button.addActionListener(e -> {
                     if (!label.equals("Enrolled") && !label.equals("In Draft") && (isCourseFall == isCurrentFall)) {
                         stopCellEditing();
@@ -1524,6 +1700,9 @@ public class UniversityAutomationApp extends JFrame {
                         stopCellEditing();
                     }
                 });
+                panel = new JPanel(new GridBagLayout());
+                panel.setOpaque(true);
+                panel.add(button);
             }
 
             @Override
@@ -1555,7 +1734,9 @@ public class UniversityAutomationApp extends JFrame {
                     button.setEnabled(true);
                 }
                 button.setForeground(Color.WHITE);
-                return button;
+                
+                panel.setBackground(table.getSelectionBackground());
+                return panel;
             }
 
             @Override
@@ -1570,30 +1751,36 @@ public class UniversityAutomationApp extends JFrame {
         draftTable.getColumnModel().getColumn(5).setCellRenderer(new TableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JButton b = new JButton(value.toString());
-                if (value.toString().equals("Confirmed")) {
+                String valStr = value == null ? "" : value.toString();
+                JButton b = new JButton(valStr);
+                styleSmallButton(b);
+                if (valStr.equals("Confirmed")) {
                     b.setBackground(Color.GRAY);
                     b.setEnabled(false);
                 } else {
                     b.setBackground(new Color(239, 68, 68));
                     b.setEnabled(true);
                 }
-                b.setForeground(Color.WHITE);
-                b.setFont(APP_FONT.deriveFont(Font.BOLD, 11f));
-                return b;
+                
+                JPanel p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                p.add(b);
+                return p;
             }
         });
 
         draftTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
             private JButton button;
+            private JPanel panel;
             private String courseCode;
             private String label;
 
             {
                 button = new JButton();
-                button.setForeground(Color.WHITE);
+                styleSmallButton(button);
                 button.addActionListener(e -> {
-                    if (label.equals("Remove")) {
+                    if ("Remove".equals(label)) {
                         stopCellEditing();
                         SwingUtilities.invokeLater(() -> {
                             draftEnrollments.remove(courseCode);
@@ -1603,13 +1790,17 @@ public class UniversityAutomationApp extends JFrame {
                         stopCellEditing();
                     }
                 });
+                panel = new JPanel(new GridBagLayout());
+                panel.setOpaque(true);
+                panel.add(button);
             }
 
             @Override
             public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                courseCode = (String) table.getValueAt(row, 0);
-                label = (value == null) ? "" : value.toString();
+                label = value == null ? "" : value.toString();
+                courseCode = table.getValueAt(row, 0).toString();
                 button.setText(label);
+                
                 if (label.equals("Confirmed")) {
                     button.setBackground(Color.GRAY);
                     button.setEnabled(false);
@@ -1617,7 +1808,9 @@ public class UniversityAutomationApp extends JFrame {
                     button.setBackground(new Color(239, 68, 68));
                     button.setEnabled(true);
                 }
-                return button;
+                
+                panel.setBackground(table.getSelectionBackground());
+                return panel;
             }
             @Override
             public Object getCellEditorValue() { return label; }
@@ -2287,45 +2480,33 @@ public class UniversityAutomationApp extends JFrame {
         return new Font("Segoe UI", Font.PLAIN, 15);
     }    private void styleTextField(JTextField field) {
         field.setFont(APP_FONT.deriveFont(14f));
-        field.setBackground(new Color(15, 23, 42));
-        field.setForeground(Color.WHITE);
-        field.setCaretColor(Color.WHITE);
-        field.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(PANEL_BG_LIGHT, 10), BorderFactory.createEmptyBorder(10, 12, 10, 12)));
+        field.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search...");
+        field.putClientProperty(FlatClientProperties.TEXT_FIELD_SHOW_CLEAR_BUTTON, true);
     }
 
     private void styleButton(JButton button) {
         button.setFont(APP_FONT.deriveFont(Font.BOLD, 14f));
         button.setBackground(ACCENT);
         button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-            new RoundedBorder(ACCENT, 15),
-            BorderFactory.createEmptyBorder(10, 25, 10, 25)
-        ));
-        
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) { if (button.isEnabled()) button.setBackground(ACCENT_HOVER); }
-            @Override
-            public void mouseExited(MouseEvent e) { button.setBackground(ACCENT); }
-        });
+        button.putClientProperty(FlatClientProperties.STYLE, "arc: 15;");
+    }
+
+    private void styleSmallButton(JButton button) {
+        button.setFont(APP_FONT.deriveFont(Font.BOLD, 11f));
+        button.setForeground(Color.WHITE);
+        button.putClientProperty(FlatClientProperties.STYLE, "arc: 10; margin: 2,10,2,10;");
     }
 
     private void styleTable(JTable table) {
         table.setFont(APP_FONT.deriveFont(14f));
         table.setRowHeight(40);
-        table.setBackground(PANEL_BG);
-        table.setForeground(TEXT_LIGHT);
-        table.setGridColor(PANEL_BG_LIGHT);
-        table.setSelectionBackground(ACCENT);
-        table.setSelectionForeground(Color.WHITE);
         table.setShowVerticalLines(false);
-
+        table.setShowHorizontalLines(true);
+        table.setGridColor(new Color(71, 85, 105)); // Subtle horizontal lines
+        table.putClientProperty(FlatClientProperties.STYLE, "rowHoverBackground: $Table.selectionInactiveBackground");
+        
         JTableHeader header = table.getTableHeader();
         header.setFont(APP_FONT.deriveFont(Font.BOLD));
-        header.setBackground(PANEL_BG_LIGHT);
-        header.setForeground(TEXT_LIGHT);
-        header.setBorder(BorderFactory.createEmptyBorder());
         ((DefaultTableCellRenderer)header.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -2336,18 +2517,7 @@ public class UniversityAutomationApp extends JFrame {
     }
 
     private void applyTheme(Container container) {
-        for (Component c : container.getComponents()) {
-            if (c instanceof JPanel) {
-                c.setBackground(DARK_BG);
-                applyTheme((Container) c);
-            } else if (c instanceof JLabel) {
-                c.setForeground(TEXT_LIGHT);
-            } else if (c instanceof JScrollPane) {
-                ((JScrollPane) c).getViewport().setBackground(DARK_BG);
-                ((JScrollPane) c).setBorder(BorderFactory.createEmptyBorder());
-                applyTheme(((JScrollPane) c).getViewport());
-            }
-        }
+        // Disabled since FlatLaf handles deep component theming perfectly and natively.
     }
 
     private JPanel createCurriculumView() {
@@ -2629,6 +2799,18 @@ public class UniversityAutomationApp extends JFrame {
     }
 
     public static void main(String[] args) {
+        try {
+            FlatDarkLaf.setup();
+            UIManager.put("Button.arc", 15);
+            UIManager.put("Component.arc", 15);
+            UIManager.put("TextComponent.arc", 15);
+            UIManager.put("ScrollBar.thumbArc", 10);
+            UIManager.put("TabbedPane.showTabSeparators", true);
+            UIManager.put("TabbedPane.tabSeparatorsFullHeight", true);
+            UIManager.put("TitlePane.unifiedBackground", false);
+        } catch (Exception ex) {
+            System.err.println("Failed to initialize LaF");
+        }
         SwingUtilities.invokeLater(() -> new UniversityAutomationApp());
     }
 }
