@@ -1,0 +1,12 @@
+# Compiled class files
+*.class
+
+# IDE and build directories
+out/
+bin/
+.idea/
+.vscode/
+*.iml
+
+# Backup files
+*.bak
