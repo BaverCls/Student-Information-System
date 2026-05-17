@@ -166,33 +166,9 @@ public class UniversityAutomationApp extends JFrame {
         fc.gridy = 4; fc.insets = new Insets(0,  44, 24, 44); card.add(passwordField, fc);
         fc.gridy = 5; fc.insets = new Insets(0,  44, 44, 44); card.add(loginButton,   fc);
 
-        // ── Quick Login Buttons (test) ────────────────────────────────────────
-        JPanel quickPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
-        quickPanel.setOpaque(false);
-
-        JButton adminQuick      = new JButton("⚡ Admin");
-        JButton instructorQuick = new JButton("⚡ Instructor");
-        JButton studentQuick    = new JButton("⚡ Student");
-
-        styleQuickButton(adminQuick,      new Color(79, 70, 229));
-        styleQuickButton(instructorQuick, new Color(16, 185, 129));
-        styleQuickButton(studentQuick,    new Color(245, 158, 11));
-
-        adminQuick.addActionListener(e      -> { usernameField.setText("admin");       passwordField.setText("123");     loginButton.doClick(); });
-        instructorQuick.addActionListener(e -> { usernameField.setText("nazifecevik"); passwordField.setText("java123"); loginButton.doClick(); });
-        studentQuick.addActionListener(e    -> { usernameField.setText("bavercls");    passwordField.setText("1907");    loginButton.doClick(); });
-
-        quickPanel.add(adminQuick);
-        quickPanel.add(instructorQuick);
-        quickPanel.add(studentQuick);
-
-        // ── Layout ────────────────────────────────────────────────────────────
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; gbc.gridy = 0;
         loginPanel.add(card, gbc);
-        gbc.gridy = 1;
-        gbc.insets = new Insets(20, 0, 0, 0);
-        loginPanel.add(quickPanel, gbc);
 
         mainPanel.add(loginPanel, "login");
     }
@@ -211,14 +187,6 @@ public class UniversityAutomationApp extends JFrame {
         ));
     }
 
-    private void styleQuickButton(JButton b, Color c) {
-        b.setFont(APP_FONT.deriveFont(Font.BOLD, 11f));
-        b.setBackground(c);
-        b.setForeground(Color.WHITE);
-        b.setFocusPainted(false);
-        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        b.setBorder(BorderFactory.createCompoundBorder(new RoundedBorder(c, 8), BorderFactory.createEmptyBorder(5, 12, 5, 12)));
-    }
 
     private void refreshDashboard() {
         if (dashboardPanel != null) {
