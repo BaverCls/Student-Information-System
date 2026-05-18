@@ -1065,7 +1065,6 @@ public class StudentUI extends JPanel {
         table.setShowVerticalLines(false);
         table.setShowHorizontalLines(true);
         table.setGridColor(new Color(71, 85, 105)); // Subtle horizontal lines
-        table.putClientProperty(FlatClientProperties.STYLE, "rowHoverBackground: $Table.selectionInactiveBackground");
         
         JTableHeader header = table.getTableHeader();
         header.setFont(APP_FONT.deriveFont(Font.BOLD));
