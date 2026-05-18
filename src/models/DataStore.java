@@ -1,4 +1,5 @@
-import models.*;
+package models;
+
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
@@ -291,8 +292,6 @@ public class DataStore {
         Map<String, GradeRecord> latestGrades = new HashMap<>();
         for (GradeRecord g : grades) {
             if (g.getStudentUsername().equals(username)) {
-                // Assuming newer grades are added to the end of the list
-                // For better accuracy, we could compare AcademicYear/Semester, but latest-in-list is a common pattern here.
                 latestGrades.put(g.getCourseCode(), g);
             }
         }

@@ -1,5 +1,5 @@
-import models.Course;
-import models.User;
+package models;
+
 import javax.swing.*;
 import java.util.List;
 
