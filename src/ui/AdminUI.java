@@ -117,10 +117,10 @@ public class AdminUI extends JPanel {
                 }
             }
         } else if (type.equals("COURSE")) {
-            headers = new String[]{"Code", "Course", "Credit", "Quota", "Semester", "Dept", "Instructor"};
+            headers = new String[]{"Code", "Course", "Credit", "Quota", "Semester", "Dept", "Instructor", "Type"};
             model.setColumnIdentifiers(headers);
             for (Course c : data.courses) {
-                model.addRow(new Object[]{c.getCourseCode(), c.getCourseName(), c.getCredit(), c.getQuota(), c.getYear(), c.getDepartment(), c.getInstructorUsername()});
+                model.addRow(new Object[]{c.getCourseCode(), c.getCourseName(), c.getCredit(), c.getQuota(), c.getYear(), c.getDepartment(), c.getInstructorUsername(), c.getCourseType()});
             }
         } else {
             headers = new String[]{"Column 1", "Column 2", "Column 3"};
@@ -249,8 +249,9 @@ public class AdminUI extends JPanel {
             JComboBox<String> cYear = new JComboBox<>(new String[]{"1", "2", "3", "4"});
             JComboBox<String> cDept = new JComboBox<>(new String[]{"CE", "EE", "IE", "ME", "BA"});
             JTextField t4 = new JTextField();
+            JComboBox<String> cType = new JComboBox<>(new String[]{"Mandatory", "Elective", "Technical Elective"});
 
-            Object[] form = { "Code:", t1, "Name:", t2, "Credit:", c1, "Quota:", t3, "Year:", cYear, "Dept:", cDept, "Instructor:", t4 };
+            Object[] form = { "Code:", t1, "Name:", t2, "Credit:", c1, "Quota:", t3, "Year:", cYear, "Dept:", cDept, "Instructor:", t4, "Type:", cType };
             int res = JOptionPane.showConfirmDialog(parentWindow, form, "Add Course", JOptionPane.OK_CANCEL_OPTION);
             
             if (res == JOptionPane.OK_OPTION
@@ -260,10 +261,10 @@ public class AdminUI extends JPanel {
                     && Validator.validateRequiredText(t4.getText(), "Instructor username")
                     && Validator.isCourseCodeUnique(t1.getText(), data.courses)
                     && isInstructorUsername(t4.getText())) {
-                Course c = new Course(t1.getText().trim(), t2.getText().trim(), c1.getSelectedItem().toString(), t3.getText().trim(), t4.getText().trim(), cYear.getSelectedItem().toString(), cDept.getSelectedItem().toString());
+                Course c = new Course(t1.getText().trim(), t2.getText().trim(), c1.getSelectedItem().toString(), t3.getText().trim(), t4.getText().trim(), cYear.getSelectedItem().toString(), cDept.getSelectedItem().toString(), cType.getSelectedItem().toString());
                 data.courses.add(c);
                 data.saveData();
-                model.addRow(new Object[]{c.getCourseCode(), c.getCourseName(), c.getCredit(), c.getQuota(), c.getYear(), c.getDepartment(), c.getInstructorUsername()});
+                model.addRow(new Object[]{c.getCourseCode(), c.getCourseName(), c.getCredit(), c.getQuota(), c.getYear(), c.getDepartment(), c.getInstructorUsername(), c.getCourseType()});
                 if (refreshDashboardAction != null) refreshDashboardAction.run();
             }
         } else if (type.equals("USER") || type.equals("STUDENT")) {
@@ -347,8 +348,10 @@ public class AdminUI extends JPanel {
             JComboBox<String> cDept = new JComboBox<>(new String[]{"CE", "EE", "IE", "ME", "BA"});
             cDept.setSelectedItem(c.getDepartment());
             JTextField t4 = new JTextField(c.getInstructorUsername());
+            JComboBox<String> cType = new JComboBox<>(new String[]{"Mandatory", "Elective", "Technical Elective"});
+            cType.setSelectedItem(c.getCourseType());
 
-            Object[] form = { "Code:", t1, "Name:", t2, "Credit:", c1, "Quota:", t3, "Year:", cYear, "Dept:", cDept, "Instructor:", t4 };
+            Object[] form = { "Code:", t1, "Name:", t2, "Credit:", c1, "Quota:", t3, "Year:", cYear, "Dept:", cDept, "Instructor:", t4, "Type:", cType };
             if (JOptionPane.showConfirmDialog(parentWindow, form, "Edit Course", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
                 if (!Validator.validateRequiredText(t1.getText(), "Course code")
                         || !Validator.validateRequiredText(t2.getText(), "Course name")
@@ -367,6 +370,7 @@ public class AdminUI extends JPanel {
                 c.setYear(cYear.getSelectedItem().toString());
                 c.setDepartment(cDept.getSelectedItem().toString());
                 c.setInstructorUsername(t4.getText().trim());
+                c.setCourseType(cType.getSelectedItem().toString());
                 updateCourseCodeReferences(oldCourseCode, newCourseCode);
                 data.saveData();
                 model.setValueAt(c.getCourseCode(), modelRow, 0);
@@ -376,6 +380,7 @@ public class AdminUI extends JPanel {
                 model.setValueAt(c.getYear(), modelRow, 4);
                 model.setValueAt(c.getDepartment(), modelRow, 5);
                 model.setValueAt(c.getInstructorUsername(), modelRow, 6);
+                model.setValueAt(c.getCourseType(), modelRow, 7);
                 if (refreshDashboardAction != null) refreshDashboardAction.run();
             }
         } else if (type.equals("USER")) {
@@ -533,7 +538,16 @@ public class AdminUI extends JPanel {
                             courseRow.setBackground(PANEL_BG);
                             courseRow.setMaximumSize(new Dimension(Short.MAX_VALUE, 40));
                             
-                            JLabel cl = new JLabel("<html><b>" + course.getCourseCode() + "</b> - " + course.getCourseName() + " (" + course.getCredit() + " ECTS)</html>");
+                            String courseDisplayName;
+                            if (c.getCourseCode().contains("_TECHSEL")) {
+                                courseDisplayName = "Technical Elective";
+                            } else if (c.getCourseCode().contains("_SEL")) {
+                                courseDisplayName = "Elective";
+                            } else {
+                                courseDisplayName = course.getCourseName();
+                            }
+                            
+                            JLabel cl = new JLabel("<html><b>" + course.getCourseCode() + "</b> - " + courseDisplayName + " (" + course.getCredit() + " ECTS)</html>");
                             cl.setForeground(TEXT_LIGHT);
                             cl.setFont(APP_FONT.deriveFont(11f));
                             

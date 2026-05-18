@@ -24,6 +24,7 @@ public class StudentUI extends JPanel {
     private final User currentUser;
     private final Runnable logoutAction;
     private final List<String> draftEnrollments = new ArrayList<>();
+    private final Map<String, String> draftElectiveSelections = new HashMap<>();
 
     public StudentUI(DataStore data, User currentUser, Runnable logoutAction) {
         this.data = data;
@@ -88,6 +89,17 @@ public class StudentUI extends JPanel {
         }
 
         StudentProfile sp = findStudentProfile(currentUser.getUsername());
+        if (sp != null) {
+            List<Curriculum> currList = data.getCurriculumForDept(sp.getDepartment());
+            for (Curriculum c : currList) {
+                String code = c.getCourseCode();
+                if (isElectivePlaceholder(code)) {
+                    if (!draftElectiveSelections.containsKey(code)) {
+                        draftElectiveSelections.put(code, null);
+                    }
+                }
+            }
+        }
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(DARK_BG);
@@ -155,10 +167,10 @@ public class StudentUI extends JPanel {
                     isCourseFall = Integer.parseInt(courseSemStr) % 2 != 0;
                 } catch (Exception ignored) {}
 
-                if (valStr.equals("Enrolled") || valStr.equals("In Draft") || (isCourseFall != isCurrentFall)) {
+                if (valStr.equals("Enrolled") || valStr.equals("In Draft") || (isCourseFall != isCurrentFall && !valStr.equals("Select Course"))) {
                     b.setBackground(Color.GRAY);
                     b.setEnabled(false);
-                    if (isCourseFall != isCurrentFall && !valStr.equals("Enrolled") && !valStr.equals("In Draft")) {
+                    if (isCourseFall != isCurrentFall && !valStr.equals("Enrolled") && !valStr.equals("In Draft") && !valStr.equals("Select Course")) {
                         b.setText("Not Offered");
                     }
                 } else if (valStr.startsWith("Upgrade")) {
@@ -205,7 +217,13 @@ public class StudentUI extends JPanel {
                 button = new JButton();
                 styleSmallButton(button);
                 button.addActionListener(e -> {
-                    if (!label.equals("Enrolled") && !label.equals("In Draft") && (isCourseFall == isCurrentFall)) {
+                    if (label.equals("Select Course")) {
+                        stopCellEditing();
+                        SwingUtilities.invokeLater(() -> {
+                            showElectiveSelectionDialog(courseCode, getPlaceholderType(courseCode));
+                            refreshTables.run();
+                        });
+                    } else if (!label.equals("Enrolled") && !label.equals("In Draft") && (isCourseFall == isCurrentFall)) {
                         stopCellEditing();
                         SwingUtilities.invokeLater(() -> {
                             addToDraft(courseCode);
@@ -232,10 +250,10 @@ public class StudentUI extends JPanel {
 
                 button.setText(label);
                 
-                if (label.equals("Enrolled") || label.equals("In Draft") || (isCourseFall != isCurrentFall)) {
+                if (label.equals("Enrolled") || label.equals("In Draft") || (isCourseFall != isCurrentFall && !label.equals("Select Course"))) {
                     button.setBackground(Color.GRAY);
                     button.setEnabled(false);
-                    if (isCourseFall != isCurrentFall && !label.equals("Enrolled") && !label.equals("In Draft")) {
+                    if (isCourseFall != isCurrentFall && !label.equals("Enrolled") && !label.equals("In Draft") && !label.equals("Select Course")) {
                         button.setText("Not Offered");
                     }
                 } else if (label.startsWith("Upgrade")) {
@@ -298,7 +316,7 @@ public class StudentUI extends JPanel {
                     if ("Remove".equals(label)) {
                         stopCellEditing();
                         SwingUtilities.invokeLater(() -> {
-                            draftEnrollments.remove(courseCode);
+                            removeFromDraft(courseCode);
                             refreshTables.run();
                         });
                     } else {
@@ -361,6 +379,7 @@ public class StudentUI extends JPanel {
                 data.enrollments.add(new Enrollment(currentUser.getUsername(), c, data.systemConfig.getCurrentYear(), data.systemConfig.getCurrentSemester()));
             }
             draftEnrollments.clear();
+            draftElectiveSelections.clear();
             data.saveData();
             JOptionPane.showMessageDialog(this, "Enrollment confirmed successfully! Courses are now officially added to your schedule.");
             refreshTables.run();
@@ -598,42 +617,106 @@ public class StudentUI extends JPanel {
         StudentProfile sp = findStudentProfile(currentUser.getUsername());
         String studentDept = sp != null ? sp.getDepartment() : "CE";
         List<Curriculum> myCurriculum = data.getCurriculumForDept(studentDept);
-        List<String> validCourseCodes = new ArrayList<>();
-        for (Curriculum c : myCurriculum) validCourseCodes.add(c.getCourseCode());
 
-        model.setRowCount(0);
-        for (Course course : data.courses) {
-            // Only show courses in the student's curriculum
-            if (!validCourseCodes.contains(course.getCourseCode())) continue;
-
-            String actionLabel = "Enroll";
-            if (isStudentEnrolled(currentUser.getUsername(), course.getCourseCode())) {
-                actionLabel = "Enrolled";
-            } else if (draftEnrollments.contains(course.getCourseCode())) {
-                actionLabel = "In Draft";
-            } else {
-                GradeRecord gr = findGradeRecord(currentUser.getUsername(), course.getCourseCode());
-                if (gr != null) {
-                    String lg = gr.getLetterGrade();
-                    if (lg.equals("FF") || lg.equals("FD") || lg.equals("NA") || lg.equals("N/A")) {
-                        actionLabel = "Retake (" + lg + ")";
-                    } else {
-                        actionLabel = "Upgrade (" + lg + ")";
-                    }
+        // Prep list of confirmed enrolled electives for mapping
+        List<Course> enrolledElectives = new ArrayList<>();
+        List<Course> enrolledTechElectives = new ArrayList<>();
+        for (Enrollment e : data.enrollments) {
+            if (e.getStudentUsername().equals(currentUser.getUsername()) &&
+                e.getAcademicYear().equals(data.systemConfig.getCurrentYear()) &&
+                e.getSemester().equals(data.systemConfig.getCurrentSemester())) {
+                Course crs = findCourse(e.getCourseCode());
+                if (crs != null) {
+                    if (crs.getCourseType().equals("Elective")) enrolledElectives.add(crs);
+                    else if (crs.getCourseType().equals("Technical Elective")) enrolledTechElectives.add(crs);
                 }
             }
+        }
 
-            model.addRow(new Object[]{
-                course.getCourseCode(),
-                course.getCourseName(),
-                course.getCredit(),
-                course.getQuota(),
-                course.getYear(),
-                course.getDepartment(),
-                countEnrollmentsForCourse(course.getCourseCode()),
-                course.getInstructorUsername(),
-                actionLabel
-            });
+        model.setRowCount(0);
+        for (Curriculum curr : myCurriculum) {
+            String slotCode = curr.getCourseCode();
+            if (isElectivePlaceholder(slotCode)) {
+                String type = getPlaceholderType(slotCode);
+                Course matchedCourse = null;
+                String actionLabel = "Select Course";
+
+                // 1. Confirmed enrollment
+                if (type.equals("Elective") && !enrolledElectives.isEmpty()) {
+                    matchedCourse = enrolledElectives.remove(0);
+                    actionLabel = "Enrolled";
+                } else if (type.equals("Technical Elective") && !enrolledTechElectives.isEmpty()) {
+                    matchedCourse = enrolledTechElectives.remove(0);
+                    actionLabel = "Enrolled";
+                }
+
+                // 2. Draft selection
+                if (matchedCourse == null) {
+                    String draftCode = draftElectiveSelections.get(slotCode);
+                    if (draftCode != null) {
+                        matchedCourse = findCourse(draftCode);
+                        actionLabel = "In Draft";
+                    }
+                }
+
+                if (matchedCourse != null) {
+                    model.addRow(new Object[]{
+                        slotCode,
+                        matchedCourse.getCourseName(),
+                        matchedCourse.getCredit(),
+                        matchedCourse.getQuota(),
+                        String.valueOf(curr.getSemester()),
+                        curr.getDepartment(),
+                        String.valueOf(countEnrollmentsForCourse(matchedCourse.getCourseCode())),
+                        matchedCourse.getInstructorUsername(),
+                        actionLabel
+                    });
+                } else {
+                    model.addRow(new Object[]{
+                        slotCode,
+                        type, // Exact text placeholder: "Elective" or "Technical Elective"
+                        "5",  // Default credit
+                        "-",  // Quota
+                        String.valueOf(curr.getSemester()),
+                        curr.getDepartment(),
+                        "-",  // Enrolled
+                        "-",  // Instructor
+                        actionLabel
+                    });
+                }
+            } else {
+                Course course = findCourse(slotCode);
+                if (course != null) {
+                    String actionLabel = "Enroll";
+                    if (isStudentEnrolled(currentUser.getUsername(), course.getCourseCode())) {
+                        actionLabel = "Enrolled";
+                    } else if (draftEnrollments.contains(course.getCourseCode())) {
+                        actionLabel = "In Draft";
+                    } else {
+                        GradeRecord gr = findGradeRecord(currentUser.getUsername(), course.getCourseCode());
+                        if (gr != null) {
+                            String lg = gr.getLetterGrade();
+                            if (lg.equals("FF") || lg.equals("FD") || lg.equals("NA") || lg.equals("N/A")) {
+                                actionLabel = "Retake (" + lg + ")";
+                            } else {
+                                actionLabel = "Upgrade (" + lg + ")";
+                            }
+                        }
+                    }
+
+                    model.addRow(new Object[]{
+                        course.getCourseCode(),
+                        course.getCourseName(),
+                        course.getCredit(),
+                        course.getQuota(),
+                        course.getYear(),
+                        course.getDepartment(),
+                        countEnrollmentsForCourse(course.getCourseCode()),
+                        course.getInstructorUsername(),
+                        actionLabel
+                    });
+                }
+            }
         }
     }
 
@@ -665,6 +748,28 @@ public class StudentUI extends JPanel {
         grid.setBackground(DARK_BG);
 
         List<Curriculum> currList = data.getCurriculumForDept(dept);
+
+        List<Course> studentElectives = new ArrayList<>();
+        List<Course> studentTechElectives = new ArrayList<>();
+        Set<String> uniqueCourseCodes = new LinkedHashSet<>();
+        for (Enrollment e : data.enrollments) {
+            if (e.getStudentUsername().equals(currentUser.getUsername())) {
+                uniqueCourseCodes.add(e.getCourseCode());
+            }
+        }
+        for (GradeRecord gr : data.grades) {
+            if (gr.getStudentUsername().equals(currentUser.getUsername())) {
+                uniqueCourseCodes.add(gr.getCourseCode());
+            }
+        }
+        for (String cCode : uniqueCourseCodes) {
+            Course crs = findCourse(cCode);
+            if (crs != null) {
+                if (crs.getCourseType().equals("Elective")) studentElectives.add(crs);
+                else if (crs.getCourseType().equals("Technical Elective")) studentTechElectives.add(crs);
+            }
+        }
+
         for (int sem = 1; sem <= 8; sem++) {
             JPanel semPanel = new JPanel(new BorderLayout());
             semPanel.setBackground(PANEL_BG);
@@ -685,7 +790,7 @@ public class StudentUI extends JPanel {
             int totalECTS = 0;
             for (Curriculum c : currList) {
                 if (c.getSemester() == sem) {
-                    Course course = findCourse(c.getCourseCode());
+                    Course course = resolveCurriculumSlot(c.getCourseCode(), studentElectives, studentTechElectives);
                     if (course != null) {
                         int credit = Integer.parseInt(course.getCredit());
                         totalECTS += credit;
@@ -1329,6 +1434,180 @@ public class StudentUI extends JPanel {
         content.add(bottom, BorderLayout.SOUTH);
 
         dialog.add(content);
+        dialog.setVisible(true);
+    }
+
+    private boolean isElectivePlaceholder(String code) {
+        return code.contains("_SEL") || code.contains("_TECHSEL");
+    }
+
+    private String getPlaceholderType(String code) {
+        if (code.contains("_TECHSEL")) {
+            return "Technical Elective";
+        }
+        return "Elective";
+    }
+
+    private void removeFromDraft(String courseCode) {
+        draftEnrollments.remove(courseCode);
+        for (Map.Entry<String, String> entry : draftElectiveSelections.entrySet()) {
+            if (courseCode.equals(entry.getValue())) {
+                entry.setValue(null);
+            }
+        }
+    }
+
+    private Course resolveCurriculumSlot(String slotCode, List<Course> studentElectives, List<Course> studentTechElectives) {
+        if (!isElectivePlaceholder(slotCode)) {
+            return findCourse(slotCode);
+        }
+        
+        String type = getPlaceholderType(slotCode);
+        
+        // 1. Taken/Enrolled/Passed course
+        if (type.equals("Elective") && !studentElectives.isEmpty()) {
+            return studentElectives.remove(0);
+        } else if (type.equals("Technical Elective") && !studentTechElectives.isEmpty()) {
+            return studentTechElectives.remove(0);
+        }
+        
+        // 2. Draft selection
+        String draftCode = draftElectiveSelections.get(slotCode);
+        if (draftCode != null) {
+            return findCourse(draftCode);
+        }
+        
+        // 3. Virtual placeholder course
+        return new Course(slotCode, type, "5", "0", "-", "-", "-", type);
+    }
+
+    private boolean isCourseAllowedForStudent(Course course, String studentDept, String typePlaceholder) {
+        String courseDept = course.getDepartment();
+        String courseCode = course.getCourseCode();
+        
+        // 1. Business Administration (BA) Rules
+        if (studentDept.equalsIgnoreCase("BA")) {
+            // BA student can select their own BA electives of matching type
+            if (courseDept.equalsIgnoreCase("BA")) {
+                return course.getCourseType().equalsIgnoreCase(typePlaceholder);
+            }
+            // BA student can also select exactly 1 specific industry-relevant course from each engineering department:
+            if (courseDept.equalsIgnoreCase("CE") && courseCode.equalsIgnoreCase("CS101")) return true; // Intro to Programming
+            if (courseDept.equalsIgnoreCase("IE") && courseCode.equalsIgnoreCase("IE302")) return true; // Supply Chain Management
+            if (courseDept.equalsIgnoreCase("EE") && courseCode.equalsIgnoreCase("EE202")) return true; // Logic Design
+            if (courseDept.equalsIgnoreCase("ME") && courseCode.equalsIgnoreCase("ME103")) return true; // CAD Drawing
+            
+            return false;
+        }
+        
+        // 2. Engineering Departments (CE, EE, IE, ME) Rules
+        boolean isEngDept = studentDept.equalsIgnoreCase("CE") || 
+                            studentDept.equalsIgnoreCase("EE") || 
+                            studentDept.equalsIgnoreCase("IE") || 
+                            studentDept.equalsIgnoreCase("ME");
+                            
+        if (isEngDept) {
+            // Engineers can select their own department's electives of matching type
+            if (courseDept.equalsIgnoreCase(studentDept)) {
+                return course.getCourseType().equalsIgnoreCase(typePlaceholder);
+            }
+            // Engineers can also select 2-3 specific universally beneficial technical electives from OTHER engineering departments:
+            if (courseDept.equalsIgnoreCase("CE") && (courseCode.equalsIgnoreCase("CS101") || courseCode.equalsIgnoreCase("CE202"))) return true; // Programming / Database
+            if (courseDept.equalsIgnoreCase("IE") && courseCode.equalsIgnoreCase("IE202")) return true; // Probability & Stats
+            if (courseDept.equalsIgnoreCase("EE") && courseCode.equalsIgnoreCase("EE202")) return true; // Logic Design
+            if (courseDept.equalsIgnoreCase("ME") && courseCode.equalsIgnoreCase("ME103")) return true; // CAD Drawing
+        }
+        
+        return false;
+    }
+
+    private void showElectiveSelectionDialog(String slotCode, String typePlaceholder) {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        JDialog dialog = new JDialog(parentWindow, "Select " + typePlaceholder, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setSize(800, 500);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel main = new JPanel(new BorderLayout(10, 10));
+        main.setBackground(DARK_BG);
+        main.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JLabel titleLabel = new JLabel("Available " + typePlaceholder + " Courses");
+        titleLabel.setFont(APP_FONT.deriveFont(Font.BOLD, 18f));
+        titleLabel.setForeground(TEXT_LIGHT);
+        main.add(titleLabel, BorderLayout.NORTH);
+
+        DefaultTableModel poolModel = new DefaultTableModel() {
+            @Override public boolean isCellEditable(int row, int col) { return col == 6; }
+        };
+        poolModel.setColumnIdentifiers(new String[]{"Code", "Course Name", "Credit", "Quota", "Dept", "Instructor", "Action"});
+        JTable poolTable = new JTable(poolModel);
+        styleTable(poolTable);
+
+        StudentProfile sp = findStudentProfile(currentUser.getUsername());
+        String studentDept = sp != null ? sp.getDepartment() : "CE";
+
+        // Populate table with courses allowed for this student
+        for (Course c : data.courses) {
+            if (isCourseAllowedForStudent(c, studentDept, typePlaceholder)) {
+                int enrolledCount = countEnrollmentsForCourse(c.getCourseCode());
+                int quotaVal = 999;
+                try { quotaVal = Integer.parseInt(c.getQuota()); } catch (Exception ignored) {}
+                
+                if (enrolledCount < quotaVal && !draftEnrollments.contains(c.getCourseCode()) && !isStudentEnrolled(currentUser.getUsername(), c.getCourseCode())) {
+                    poolModel.addRow(new Object[]{
+                        c.getCourseCode(),
+                        c.getCourseName(),
+                        c.getCredit(),
+                        c.getQuota(),
+                        c.getDepartment(),
+                        c.getInstructorUsername(),
+                        "Select"
+                    });
+                }
+            }
+        }
+
+        poolTable.getColumnModel().getColumn(6).setCellRenderer(new TableCellRenderer() {
+            @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                JButton b = new JButton("Select");
+                styleSmallButton(b);
+                b.setBackground(ACCENT);
+                JPanel p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                p.add(b);
+                return p;
+            }
+        });
+
+        poolTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
+            private JButton b = new JButton("Select");
+            private JPanel p;
+            private String selectedCode;
+            {
+                styleSmallButton(b);
+                b.setBackground(ACCENT);
+                b.addActionListener(e -> {
+                    stopCellEditing();
+                    draftElectiveSelections.put(slotCode, selectedCode);
+                    draftEnrollments.add(selectedCode);
+                    dialog.dispose();
+                });
+                p = new JPanel(new GridBagLayout());
+                p.setOpaque(true);
+                p.add(b);
+            }
+            @Override public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                selectedCode = table.getValueAt(row, 0).toString();
+                p.setBackground(table.getSelectionBackground());
+                return p;
+            }
+            @Override public Object getCellEditorValue() { return "Select"; }
+        });
+
+        main.add(new JScrollPane(poolTable), BorderLayout.CENTER);
+        dialog.add(main);
+        applyTheme(main);
         dialog.setVisible(true);
     }
 }

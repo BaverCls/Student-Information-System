@@ -88,7 +88,7 @@ public class UniversityAutomationApp extends JFrame {
         title.setForeground(new Color(248, 250, 252));
 
         // ── Username ─────────────────────────────────────────────────────────
-        JLabel userLabel = new JLabel("Kullanıcı Adı");
+        JLabel userLabel = new JLabel("Username");
         userLabel.setFont(APP_FONT.deriveFont(Font.PLAIN, 13f));
         userLabel.setForeground(new Color(148, 163, 184));
 
@@ -96,7 +96,7 @@ public class UniversityAutomationApp extends JFrame {
         styleLoginField(usernameField);
 
         // ── Password ─────────────────────────────────────────────────────────
-        JLabel passLabel = new JLabel("Şifre");
+        JLabel passLabel = new JLabel("Password");
         passLabel.setFont(APP_FONT.deriveFont(Font.PLAIN, 13f));
         passLabel.setForeground(new Color(148, 163, 184));
 

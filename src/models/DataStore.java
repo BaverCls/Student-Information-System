@@ -92,16 +92,24 @@ public class DataStore {
             while ((line = br.readLine()) != null) {
                 String[] p = cleanParts(line.split(","));
                 if (p.length == 5) {
-                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], "1", inferDept(p[0])));
+                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], "1", inferDept(p[0]), inferCourseType(p[0], p[1])));
                 } else if (p.length == 6) {
-                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], p[5], inferDept(p[0])));
+                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], p[5], inferDept(p[0]), inferCourseType(p[0], p[1])));
                 } else if (p.length == 7) {
-                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], p[5], p[6]));
+                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], p[5], p[6], inferCourseType(p[0], p[1])));
+                } else if (p.length >= 8) {
+                    courses.add(new Course(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]));
                 }
             }
         } catch (IOException e) {
             showFileError("Could not read courses.txt", e);
         }
+    }
+
+    private String inferCourseType(String code, String name) {
+        if (code.contains("TECHSEL")) return "Technical Elective";
+        if (code.contains("SEL")) return "Elective";
+        return "Mandatory";
     }
 
     private String inferDept(String code) {

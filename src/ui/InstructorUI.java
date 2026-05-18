@@ -90,7 +90,7 @@ public class InstructorUI extends JPanel {
             public boolean isCellEditable(int row, int column) { return false; }
         };
 
-        String[] headers = new String[]{"Code", "Course", "Credit", "Quota", "Semester", "Enrolled"};
+        String[] headers = new String[]{"Code", "Course", "Credit", "Quota", "Semester", "Enrolled", "Type"};
         model.setColumnIdentifiers(headers);
         for (Course c : data.courses) {
             if (c.getInstructorUsername().equals(currentUser.getUsername())) {
@@ -100,7 +100,8 @@ public class InstructorUI extends JPanel {
                     c.getCredit(),
                     c.getQuota(),
                     c.getYear(),
-                    countEnrollmentsForCourse(c.getCourseCode())
+                    countEnrollmentsForCourse(c.getCourseCode()),
+                    c.getCourseType()
                 });
             }
         }
